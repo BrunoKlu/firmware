@@ -57,10 +57,11 @@ extern "C" {
 #define HAS_RGB_STATUS_LED 1
 #define RGB_STATUS_LED_PIN 29
 
-// User button gestures (see InputBroker.cpp / ButtonThread.cpp)
-#define BUTTON_DOUBLE_PRESS_EVENT INPUT_BROKER_SEND_INFO  // NodeInfo + position, with reply request
-#define BUTTON_TRIPLE_PRESS_EVENT INPUT_BROKER_RGB_TOGGLE // RGB status LED on/off
-#define BUTTON_QUAD_PRESS_MUTE                             // 4 clicks: notifications mute, even with a screen
+// User button gestures (see InputBroker.cpp / ButtonThread.cpp); the joystick does the navigation
+#define BUTTON_SINGLE_PRESS_EVENT INPUT_BROKER_SCREEN_TOGGLE // display on/off (as the factory firmware)
+#define BUTTON_DOUBLE_PRESS_EVENT INPUT_BROKER_RGB_TOGGLE    // RGB status LED on/off
+#define BUTTON_TRIPLE_PRESS_EVENT INPUT_BROKER_BUZZER_TOGGLE // notifications mute on/off
+#define BUTTON_LONG_PRESS_EVENT INPUT_BROKER_SEND_INFO       // 1 s: NodeInfo + position, with reply request
 
 // 5-way joystick (one active-low switch per direction, pins as in the MeshCore
 // variant), driven by the "trackball" input driver: up/down/left/right + select

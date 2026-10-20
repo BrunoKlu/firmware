@@ -145,6 +145,19 @@ int SystemCommandsModule::handleInputEvent(const InputEvent *event)
         IF_SCREEN(screen->showSimpleBanner(config.device.led_heartbeat_disabled ? "LED\nDisabled" : "LED\nEnabled", 3000));
 #endif
         return true;
+    // Display on/off. When the display is off, InputBroker drops the event and the
+    // power FSM has already turned it on, so in practice this only turns it off.
+    case INPUT_BROKER_SCREEN_TOGGLE:
+        IF_SCREEN(screen->setOn(!screen->isScreenOn()));
+        return true;
+    // Notifications mute on/off (button equivalent of the keyboard INPUT_BROKER_MSG_MUTE_TOGGLE)
+    case INPUT_BROKER_BUZZER_TOGGLE:
+        if (moduleConfig.external_notification.enabled && externalNotificationModule) {
+            externalNotificationModule->setMute(!externalNotificationModule->getMute());
+            IF_SCREEN(if (!externalNotificationModule->getMute()) externalNotificationModule->stopNow(); screen->showSimpleBanner(
+                externalNotificationModule->getMute() ? "Notifications\nDisabled" : "Notifications\nEnabled", 3000);)
+        }
+        return true;
     // Power control
     case INPUT_BROKER_SHUTDOWN:
         shutdownAtMsec = Time::skipZero(Time::getMillis());

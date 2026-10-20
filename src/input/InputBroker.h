@@ -32,6 +32,8 @@ enum input_broker_event {
     INPUT_BROKER_SEND_PING = 0xaf,
     INPUT_BROKER_SEND_INFO = 0xa0,  // broadcast our NodeInfo and position, asking for replies
     INPUT_BROKER_RGB_TOGGLE = 0xa1, // RGB status LED on/off (HAS_RGB_STATUS_LED)
+    INPUT_BROKER_SCREEN_TOGGLE = 0xa2, // display on/off
+    INPUT_BROKER_BUZZER_TOGGLE = 0xa3, // notifications mute on/off (same as the keyboard fn+m)
     INPUT_BROKER_FN_F1 = 0xf1,
     INPUT_BROKER_FN_F2 = 0xf2,
     INPUT_BROKER_FN_F3 = 0xf3,

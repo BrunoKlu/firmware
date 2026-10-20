@@ -407,6 +407,13 @@ void InputBroker::Init()
         userConfig.longPress = INPUT_BROKER_SELECT;
         userConfig.longPressTime = 500;
         userConfig.longLongPress = INPUT_BROKER_SHUTDOWN;
+#ifdef BUTTON_SINGLE_PRESS_EVENT
+        userConfig.singlePress = BUTTON_SINGLE_PRESS_EVENT; // variant opt-in (boards with another way to navigate)
+#endif
+#ifdef BUTTON_LONG_PRESS_EVENT
+        userConfig.longPress = BUTTON_LONG_PRESS_EVENT;
+        userConfig.longPressTime = 1000;
+#endif
 #ifdef BUTTON_DOUBLE_PRESS_EVENT
         userConfig.doublePress = BUTTON_DOUBLE_PRESS_EVENT; // variant opt-in (slower single click)
 #endif
