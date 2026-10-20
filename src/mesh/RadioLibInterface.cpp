@@ -628,6 +628,9 @@ void RadioLibInterface::handleReceiveInterrupt()
     if (length > sizeof(radioBuffer)) {
         LOG_ERROR("Ignore rx packet, bad length %u", (unsigned int)length);
         rxBad++;
+#ifdef HAS_RGB_STATUS_LED
+        rgb_led.onInvalidPacket();
+#endif
         return;
     }
 
@@ -654,6 +657,9 @@ void RadioLibInterface::handleReceiveInterrupt()
                   state, radioBuffer.header.id, radioBuffer.header.from, radioBuffer.header.to, radioBuffer.header.flags,
                   iface->getSNR(), lround(iface->getRSSI()), radioBuffer.header.next_hop, radioBuffer.header.relay_node);
         rxBad++;
+#ifdef HAS_RGB_STATUS_LED
+        rgb_led.onInvalidPacket();
+#endif
 
         airTime->logAirtime(RX_ALL_LOG, rxMsec);
 
@@ -665,6 +671,9 @@ void RadioLibInterface::handleReceiveInterrupt()
         if (payloadLen < 0) {
             LOG_WARN("Ignore received packet too short");
             rxBad++;
+#ifdef HAS_RGB_STATUS_LED
+            rgb_led.onInvalidPacket();
+#endif
             airTime->logAirtime(RX_ALL_LOG, rxMsec);
         } else {
             rxGood++;

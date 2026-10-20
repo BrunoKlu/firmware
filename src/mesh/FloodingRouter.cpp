@@ -1,5 +1,6 @@
 #include "FloodingRouter.h"
 #include "MeshTypes.h"
+#include "RgbStatusLed.h"
 #include "NodeDB.h"
 #include "configuration.h"
 #include "mesh-pb-constants.h"
@@ -43,6 +44,10 @@ bool FloodingRouter::shouldFilterReceived(const meshtastic_MeshPacket *p)
     if (seenRecently) {
         printPacket("Ignore dupe incoming msg", p);
         rxDupe++;
+#ifdef HAS_RGB_STATUS_LED
+        if (p->transport_mechanism == meshtastic_MeshPacket_TransportMechanism_TRANSPORT_LORA)
+            rgb_led.onDuplicatePacket();
+#endif
 
         /* If the original transmitter is doing retransmissions (hopStart equals hopLimit) for a reliable transmission, e.g., when
         the ACK got lost, we will handle the packet again to make sure it gets an implicit ACK. */

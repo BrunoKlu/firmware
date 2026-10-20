@@ -11,6 +11,8 @@
  * Status indicator on a single WS2812 (NeoPixel) RGB LED (RGB_STATUS_LED_PIN).
  *
  *   - LoRa packet received     : short burst of fast green flicker
+ *   - duplicate packet         : the burst turns yellow (already seen, eg. relayed twice)
+ *   - invalid packet           : short burst of magenta flicker (CRC error, bad length)
  *   - LoRa transmit in progress: fast red flicker (old HDD activity LED)
  *   - channel message received : white blinking (half brightness) for 3 s
  *   - direct message received  : blue blinking (half brightness) for 3 s
@@ -35,7 +37,9 @@ class RgbStatusLed
 
     void onTxStart() { _tx = true; }
     void onTxEnd() { _tx = false; }
-    void onPacketReceived() { _rx_until = millis() + RX_BURST_MS; }
+    void onPacketReceived() { startRx(0, ACTIVITY_LEVEL, 0); }
+    void onDuplicatePacket() { startRx(ACTIVITY_LEVEL, ACTIVITY_LEVEL / 2, 0); } // yellow/orange
+    void onInvalidPacket() { startRx(ACTIVITY_LEVEL, 0, ACTIVITY_LEVEL); }        // magenta
     void onChannelMessage() { startBlink(128, 128, 128); }
     void onDirectMessage() { startBlink(0, 0, 128); }
 
@@ -47,6 +51,11 @@ class RgbStatusLed
     static const uint8_t ACTIVITY_LEVEL = 40;  // TX/RX flicker brightness (messages use 128)
 
     void startBlink(uint8_t r, uint8_t g, uint8_t b, uint32_t ms = MSG_BLINK_MS);
+    void startRx(uint8_t r, uint8_t g, uint8_t b)
+    {
+        _rx_color = Adafruit_NeoPixel::Color(r, g, b);
+        _rx_until = millis() + RX_BURST_MS;
+    }
     void show(uint32_t color);
 
     Adafruit_NeoPixel _pixel;
@@ -54,6 +63,7 @@ class RgbStatusLed
     bool _enabled = true;
     bool _tx = false;
     uint32_t _rx_until = 0;
+    uint32_t _rx_color = 0;
     uint32_t _blink_start = 0, _blink_until = 0;
     uint32_t _blink_color = 0;
 };

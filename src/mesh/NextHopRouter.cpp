@@ -1,6 +1,7 @@
 #include "NextHopRouter.h"
 #include "Default.h"
 #include "MeshTypes.h"
+#include "RgbStatusLed.h"
 #include "Throttle.h"
 #include "UptimeClock.h"
 #include "meshUtils.h"
@@ -148,6 +149,9 @@ bool NextHopRouter::shouldFilterReceived(const meshtastic_MeshPacket *p)
 
         if (p->transport_mechanism == meshtastic_MeshPacket_TransportMechanism_TRANSPORT_LORA) {
             rxDupe++;
+#ifdef HAS_RGB_STATUS_LED
+            rgb_led.onDuplicatePacket();
+#endif
             stopRetransmission(p->from, p->id);
         }
 
