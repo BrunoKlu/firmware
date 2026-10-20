@@ -156,6 +156,9 @@ void printPartitionTable()
 #endif // ARCH_ESP32
 
 #include "AmbientLightingThread.h"
+#ifdef HAS_RGB_STATUS_LED
+#include "RgbStatusLed.h"
+#endif
 #include "PowerFSMThread.h"
 
 #if !defined(ARCH_STM32WL) && !MESHTASTIC_EXCLUDE_I2C && !MESHTASTIC_EXCLUDE_ACCELEROMETER
@@ -920,6 +923,9 @@ void setup()
     }
 #endif
 
+#ifdef HAS_RGB_STATUS_LED
+    rgbStatusThread = new RgbStatusThread();
+#endif
 #if defined(HAS_NEOPIXEL) || defined(UNPHONE) || defined(RGBLED_RED)
     ambientLightingThread = new AmbientLightingThread(ScanI2C::DeviceType::NONE);
 #elif !defined(ARCH_PORTDUINO) && !defined(ARCH_STM32WL)

@@ -407,6 +407,12 @@ void InputBroker::Init()
         userConfig.longPress = INPUT_BROKER_SELECT;
         userConfig.longPressTime = 500;
         userConfig.longLongPress = INPUT_BROKER_SHUTDOWN;
+#ifdef BUTTON_DOUBLE_PRESS_EVENT
+        userConfig.doublePress = BUTTON_DOUBLE_PRESS_EVENT; // variant opt-in (slower single click)
+#endif
+#ifdef BUTTON_TRIPLE_PRESS_EVENT
+        userConfig.triplePress = BUTTON_TRIPLE_PRESS_EVENT;
+#endif
         UserButtonThread->initButton(userConfig);
     } else
 #endif

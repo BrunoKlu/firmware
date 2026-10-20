@@ -15,6 +15,9 @@
  */
 #include "ExternalNotificationModule.h"
 #include "Channels.h"
+#ifdef HAS_RGB_STATUS_LED
+#include "RgbStatusLed.h"
+#endif
 #include "MeshService.h"
 #include "NodeDB.h"
 #include "Router.h"
@@ -423,6 +426,12 @@ ProcessMessage ExternalNotificationModule::handleReceived(const meshtastic_MeshP
 
             const bool isDmToUs = !isBroadcast(mp.to) && isToUs(&mp);
             const bool is_muted = isMutedForPacket(mp);
+#ifdef HAS_RGB_STATUS_LED
+            if (isDmToUs)
+                rgb_led.onDirectMessage();
+            else
+                rgb_led.onChannelMessage();
+#endif
 
             const bool buzzerModeIsDirectOnly =
                 (config.device.buzzer_mode == meshtastic_Config_DeviceConfig_BuzzerMode_DIRECT_MSG_ONLY);

@@ -16,6 +16,10 @@
 #include "main.h"
 #include "modules/AdminModule.h"
 #include "modules/ExternalNotificationModule.h"
+#include "modules/NodeInfoModule.h"
+#ifdef HAS_RGB_STATUS_LED
+#include "RgbStatusLed.h"
+#endif
 
 SystemCommandsModule *systemCommandsModule;
 
@@ -123,6 +127,23 @@ int SystemCommandsModule::handleInputEvent(const InputEvent *event)
         } else {
             IF_SCREEN(screen->showSimpleBanner("Node Info\nSent", 3000));
         }
+        return true;
+    // Our NodeInfo and position, with reply request (closest thing to a MeshCore flood advert)
+    case INPUT_BROKER_SEND_INFO: {
+        service->refreshLocalMeshNode();
+        bool info = nodeInfoModule && nodeInfoModule->sendOurNodeInfo(NODENUM_BROADCAST, true);
+        bool pos = service->trySendPosition(NODENUM_BROADCAST, true);
+        IF_SCREEN(screen->showSimpleBanner(info && pos ? "Node Info +\nPosition Sent" : info ? "Node Info\nSent" : "Nothing\nSent", 3000));
+        return true;
+    }
+    // RGB status LED on/off, remembered as "LED heartbeat disabled"
+    case INPUT_BROKER_RGB_TOGGLE:
+#ifdef HAS_RGB_STATUS_LED
+        config.device.led_heartbeat_disabled = !config.device.led_heartbeat_disabled;
+        rgb_led.setEnabled(!config.device.led_heartbeat_disabled);
+        nodeDB->saveToDisk(SEGMENT_CONFIG);
+        IF_SCREEN(screen->showSimpleBanner(config.device.led_heartbeat_disabled ? "LED\nDisabled" : "LED\nEnabled", 3000));
+#endif
         return true;
     // Power control
     case INPUT_BROKER_SHUTDOWN:

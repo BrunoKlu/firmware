@@ -253,7 +253,7 @@ int32_t ButtonThread::runOnce()
                 this->notifyObservers(&evt);
                 playComboTune();
                 break;
-#if !HAS_SCREEN
+#if !HAS_SCREEN || defined(BUTTON_QUAD_PRESS_MUTE)
             case 4:
                 if (moduleConfig.external_notification.enabled && externalNotificationModule) {
                     externalNotificationModule->setMute(!externalNotificationModule->getMute());

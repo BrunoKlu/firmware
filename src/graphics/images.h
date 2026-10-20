@@ -208,6 +208,20 @@ const uint8_t icon_module[] PROGMEM = {
     0b00011000  // ░░░██░░░
 };
 
+// crossed-out light bulb, shown in the header when the RGB status LED is disabled
+#define led_off_symbol_width 8
+#define led_off_symbol_height 8
+const uint8_t led_off_symbol[] PROGMEM = {
+    0b10111100, //   ████ █
+    0b01000010, //  █    █
+    0b10100001, // █    █ █
+    0b10010001, // █   █  █
+    0b01001010, //  █ █  █
+    0b00100100, //   █  █
+    0b00111110, //  █████
+    0b00011001, // █  ██
+};
+
 #define mute_symbol_width 8
 #define mute_symbol_height 8
 const uint8_t mute_symbol[] PROGMEM = {

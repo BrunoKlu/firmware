@@ -1,5 +1,8 @@
 #include "RadioLibInterface.h"
 #include "MeshTypes.h"
+#ifdef HAS_RGB_STATUS_LED
+#include "RgbStatusLed.h"
+#endif
 #include "NodeDB.h"
 #include "PowerMon.h"
 #include "RadioTxHook.h"
@@ -585,6 +588,9 @@ void RadioLibInterface::completeSending()
 #ifdef LED_LORA
     digitalWrite(LED_LORA, LED_STATE_OFF);
 #endif
+#ifdef HAS_RGB_STATUS_LED
+    rgb_led.onTxEnd();
+#endif
 
     if (p) {
         // Packet has been sent, count it toward our TX airtime utilization.
@@ -662,6 +668,9 @@ void RadioLibInterface::handleReceiveInterrupt()
             airTime->logAirtime(RX_ALL_LOG, rxMsec);
         } else {
             rxGood++;
+#ifdef HAS_RGB_STATUS_LED
+            rgb_led.onPacketReceived();
+#endif
             // altered packet with "from == 0" can do Remote Node Administration without permission
             if (radioBuffer.header.from == 0) {
                 LOG_WARN("Ignore received packet without sender");
@@ -843,6 +852,9 @@ bool RadioLibInterface::startSend(meshtastic_MeshPacket *txp)
             printPacket("Started Tx", txp);
 #ifdef LED_LORA
             digitalWrite(LED_LORA, LED_STATE_ON);
+#endif
+#ifdef HAS_RGB_STATUS_LED
+            rgb_led.onTxStart();
 #endif
         }
 

@@ -53,6 +53,15 @@ extern "C" {
 
 #define LED_STATE_ON 1 // State when LED is litted
 
+// WS2812 RGB LED on the PCB, used as a status indicator (see src/RgbStatusLed.h)
+#define HAS_RGB_STATUS_LED 1
+#define RGB_STATUS_LED_PIN 29
+
+// User button gestures (see InputBroker.cpp / ButtonThread.cpp)
+#define BUTTON_DOUBLE_PRESS_EVENT INPUT_BROKER_SEND_INFO  // NodeInfo + position, with reply request
+#define BUTTON_TRIPLE_PRESS_EVENT INPUT_BROKER_RGB_TOGGLE // RGB status LED on/off
+#define BUTTON_QUAD_PRESS_MUTE                             // 4 clicks: notifications mute, even with a screen
+
 /*
  * Buttons
  */
@@ -244,9 +253,8 @@ SO GPIO 39/TXEN MAY NOT BE DEFINED FOR SUCCESSFUL OPERATION OF THE SX1262 - TG
 // RAK12002 RTC Module
 // #define RV3028_RTC (uint8_t)0b1010010
 
-// RAK18001 Buzzer in Slot C
-// #define PIN_BUZZER 21 // IO3 is PWM2
-// NEW: set this via protobuf instead!
+// On-board passive buzzer (same pin as the MeshCore variant); loudest around 3.5 kHz
+#define PIN_BUZZER 33
 
 // Battery
 // The battery sense is hooked to pin A0 (5)

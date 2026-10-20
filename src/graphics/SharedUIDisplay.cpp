@@ -1,4 +1,7 @@
 #include "configuration.h"
+#ifdef HAS_RGB_STATUS_LED
+#include "RgbStatusLed.h"
+#endif
 #if HAS_SCREEN
 #include "MeshService.h"
 #include "NodeDB.h"
@@ -464,6 +467,25 @@ void drawCommonHeader(OLEDDisplay *display, int16_t x, int16_t y, const char *ti
                 display->drawXbm(iconX, iconY, mute_symbol_width, mute_symbol_height, mute_symbol);
             }
         }
+
+#ifdef HAS_RGB_STATUS_LED
+        // crossed-out bulb, left of the mail/mute slot, while the RGB status LED is disabled
+        if (!rgb_led.isEnabled()) {
+            int slotWidth = (currentResolution == ScreenResolution::High) ? mute_symbol_big_width : mute_symbol_width;
+            int iconX = iconRightEdge - slotWidth - 2 - led_off_symbol_width;
+            int iconY = textY + (FONT_HEIGHT_SMALL - led_off_symbol_height) / 2;
+            if (useInvertedHeaderStyle) {
+                display->setColor(WHITE);
+                display->fillRect(iconX - 1, iconY - 1, led_off_symbol_width + 2, led_off_symbol_height + 2);
+                display->setColor(BLACK);
+            } else {
+                display->setColor(BLACK);
+                display->fillRect(iconX - 1, iconY - 1, led_off_symbol_width + 2, led_off_symbol_height + 2);
+                display->setColor(WHITE);
+            }
+            display->drawXbm(iconX, iconY, led_off_symbol_width, led_off_symbol_height, led_off_symbol);
+        }
+#endif
 
         if (show_date) {
             // === Draw Date ===
