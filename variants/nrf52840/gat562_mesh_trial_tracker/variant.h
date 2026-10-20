@@ -62,6 +62,16 @@ extern "C" {
 #define BUTTON_TRIPLE_PRESS_EVENT INPUT_BROKER_RGB_TOGGLE // RGB status LED on/off
 #define BUTTON_QUAD_PRESS_MUTE                             // 4 clicks: notifications mute, even with a screen
 
+// 5-way joystick (one active-low switch per direction, pins as in the MeshCore
+// variant), driven by the "trackball" input driver: up/down/left/right + select
+#define HAS_TRACKBALL 1
+#define TB_UP 28
+#define TB_DOWN 4
+#define TB_LEFT 30
+#define TB_RIGHT 31
+#define TB_PRESS 26
+#define TB_DIRECTION FALLING
+
 /*
  * Buttons
  */

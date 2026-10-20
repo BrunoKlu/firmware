@@ -253,7 +253,14 @@ int32_t ButtonThread::runOnce()
                 this->notifyObservers(&evt);
                 playComboTune();
                 break;
-#if !HAS_SCREEN || defined(BUTTON_QUAD_PRESS_MUTE)
+#if defined(BUTTON_QUAD_PRESS_MUTE)
+            case 4:
+                // SystemCommandsModule toggles the mute and shows the "Notifications Disabled/Enabled" banner
+                evt.inputEvent = (input_broker_event)INPUT_BROKER_MSG_MUTE_TOGGLE;
+                this->notifyObservers(&evt);
+                playComboTune();
+                break;
+#elif !HAS_SCREEN
             case 4:
                 if (moduleConfig.external_notification.enabled && externalNotificationModule) {
                     externalNotificationModule->setMute(!externalNotificationModule->getMute());
